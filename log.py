@@ -15,7 +15,7 @@ from colorama import Fore, Back, Style
 #   This is nowhere near done, and is only a very early version of this code.
 #
 # Some possible upcoming features:
-#    - Showing a couple lines above and before the log code.
+#    - Showing a couple lines above and before the log code. (NOTE: addding this now)
 #    - Optional breakpoint (stoping execution with input())
 #    - Some other, probably fancier way of displaying stuff
 #    - Configurable colours
@@ -47,12 +47,13 @@ class traceback_file:
         """
         self._format(file_data)
 
+
         self.json = {
                 "path": self.path,
                 "fname": self.fname,
                 "line": self.line,
                 "place": self.place,
-                "code": self.code
+                "code": self.code,
                 }
 
 
@@ -89,12 +90,18 @@ class traceback_file:
 
 
 
+
+
+
+
 class log:
     def __init__(self, data):
         """Log stuff in a cool way"""
         self.argument = self._check_arg(data)
 
         self.stack = self._get_stack()
+
+        self.code_snippet = self._get_neighbour_lines()
 
         self.json = self._format_json()
 
@@ -154,10 +161,30 @@ class log:
         return {
                 "args": self.argument,
                 "atype": self.arg_type,
-                "stack": [x.json for x in self.stack]
+                "stack": [x.json for x in self.stack],
+                "code_snippet": self.code_snippet
                 }
 
 
+    def _get_neighbour_lines(self):
+        """
+            Function gets a few lines above and
+            below the line that called the log
+            function
+        """
+        # print(self.stack[-1].code)
+
+        with open(self.stack[-1].fname, "r")as ifstream:
+            code = ifstream.read().split('\n')
+
+        useful_lines = []
+        for i in range(self.stack[-1].line-5, self.stack[-1].line+5):
+            try:
+                useful_lines.append(code[i])
+            except IndexError:
+                pass
+
+        return useful_lines
 
 
 

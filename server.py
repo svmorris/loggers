@@ -34,7 +34,17 @@ def tmp_display(json_data):
         ]
 
     for call in json_data['stack']:
-        output.append(f"\t{Colours.OKCYAN}{call['code']:<50}{call['path']:<60}Line: {call['line']}")
+        output.append(f"\t{Colours.OKCYAN}{call['code']:<50}{call['path']:<60}Line: {call['line']} {Colours.ENDC}")
+
+    output.append("\n")
+
+    for line in json_data['code_snippet']:
+        if line.strip() == json_data['stack'][-1]['code'].strip():
+            output.append(f"\t{Colours.WARNING}{line} {Colours.ENDC}")
+        else:
+            output.append(f"\t{line}")
+
+    output.append("\n\n")
 
     print('\n'.join(output))
 

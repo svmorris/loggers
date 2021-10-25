@@ -34,7 +34,7 @@ def tmp_display(json_data):
         ]
 
     for call in json_data['stack']:
-        output.append(f"\t{Colours.OKCYAN}{call['code']:<50}{call['path']:<60}Line: {call['line']} {Colours.ENDC}")
+        output.append(f"\t{Colours.OKCYAN}{call['code']:<90}{call['path']:<150}Line: {call['line']} {Colours.ENDC}")
 
     output.append("\n")
 
